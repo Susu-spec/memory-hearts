@@ -1,6 +1,9 @@
 const cards = ["💖", "💖", "😍", "😍", "💌", "💌", "💕", "💕", "💘", "💘", "💓", "💓"];
 let flippedCards = [];
 let matchedCards = [];
+let moveCount = 0;
+
+let timerInterval;
 
 
 function shuffle(array) {
@@ -13,6 +16,20 @@ function shuffle(array) {
 
 function createBoard() {
   const gameBoard = document.getElementById("game-board");
+
+  gameBoard.innerHTML = "";
+  flippedCards = [];
+  matchedCards = [];
+
+  moveCount = 0;
+  updateMoveCounter();
+
+  stopTimer();
+  timeElapsed = 0;
+  updateTimeCounter();
+  startTimer();
+  
+
   const shuffledCards = shuffle(cards);
   shuffledCards.forEach((card, index) => {
     const cardElement = document.createElement("div");
@@ -24,17 +41,42 @@ function createBoard() {
     gameBoard.appendChild(cardElement);
   });
 }
-// flipcard logic
-// 1. listen for the event target and store it
-// 2. card shoud flip if it meets the following conditions:
-//     - it should not be already flipped
-//     - it should not be already matched
-//    - there should not be more than 2 cards flipped
-// 3. update text content from ? to the correct value
-// 4.. if the card is flipped, add it to the flippedCards array
-// 5. push my card
-// 6. if the flippedCards array has 2 cards, check if they match
-// 7. call it where it will be triggered , createBoard
+
+function updateMoveCounter() {
+  const counterElement = document.getElementById("move-counter");
+  if (counterElement) {
+    counterElement.textContent = moveCount;
+  }
+}
+
+function updateTimeCounter() {
+  const timeCounterElement = document.getElementById("time-counter");
+  if (timeCounterElement) {
+    timeCounterElement.textContent = `${timeElapsed} sec`;
+  }
+}
+
+/**
+ * Starts the timer that increments the elapsed time every second.
+ */
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeElapsed++;
+    updateTimeCounter();
+  }, 1000);
+}
+
+/**
+ * Stops the timer.
+ */
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+
+/**
+* Listen for click and flip card
+*/
 
 function flipCard(event) {
     const card = event.target;
@@ -42,9 +84,12 @@ function flipCard(event) {
     card.textContent = card.dataset.value;
     card.classList.add("flipped");
     flippedCards.push(card);
+
     if (flippedCards.length === 2) {
-      checkMatch();
-        }
+        moveCount++;
+        updateMoveCounter();
+        checkMatch();
+      }
     }
 }
 
@@ -58,8 +103,9 @@ function checkMatch (){
       matchedCards.push(card1, card2);
       flippedCards = [];
       if(matchedCards.length === cards.length){
+          stopTimer();
           setTimeout(() =>{
-              alert("🥳🥳 Yay! You've matched all the hearts! Happy Valentine!❤️")
+            alert("🥳🥳 Yay! You've matched all the hearts! Happy Valentine!❤️")
           }, 600);
       }
   }else{
@@ -73,11 +119,10 @@ function checkMatch (){
   }
 }
 
-// 1. to reset game we are resetting is the game board
-// 2. get the #game-board element 
-// 3. empty the element
-// 4. empty flippedCards and matchedCards
-// 5. call createBoard()
+
+/**
+ * reset the game
+ */
 
 function resetGame(){
   const gameBoard = document.getElementById("game-board");

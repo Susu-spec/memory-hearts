@@ -10,9 +10,23 @@
   <main class="container">
     <h1>Match the Hearts 💖</h1>
     <p>Find all the matching pairs of love-themed messages!</p>
-    <div id="game-board" class="game-board">
+
+
+    <section class="time-move-container">
+      <div class="time-container">
+        <p>Time elapsed:</p>
+        <div id="time-counter" class="time-counter">0 sec</div>
+      </div>
+      <div class="move-container">
+        <p>Number of Moves:</p>
+        <div id="move-counter" class="move-counter">0</div>
+      </div>
+    </section>
+    
+
+    <section id="game-board" class="game-board">
       <!-- Cards will be generated here using JavaScript -->
-    </div>
+    </section>
     <button id="reset-button" onclick="resetGame()">Reset Game</button>
   </main>
   <script src="script.js"></script>
